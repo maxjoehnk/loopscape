@@ -8,7 +8,7 @@ on:
       - feature/web-export
 
 env:
-  GODOT_VERSION: 4.4.1
+  GODOT_VERSION: 4.7.2
   EXPORT_NAME: Loopscape
   PROJECT_PATH: "."
   # Built by .github/workflows/web-toolchain.yml.
@@ -20,7 +20,7 @@ jobs:
     name: Windows Export
     runs-on: ubuntu-22.04
     container:
-      image: barichello/godot-ci:mono-4.4.1
+      image: barichello/godot-ci:mono-4.7.2
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
     name: Linux Export
     runs-on: ubuntu-22.04
     container:
-      image: barichello/godot-ci:mono-4.4.1
+      image: barichello/godot-ci:mono-4.7.2
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
     name: Mac Export
     runs-on: ubuntu-22.04
     container:
-      image: barichello/godot-ci:mono-4.4.1
+      image: barichello/godot-ci:mono-4.7.2
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -120,7 +120,7 @@ jobs:
     if: false
     runs-on: ubuntu-22.04
     container:
-      image: barichello/godot-ci:mono-4.4.1
+      image: barichello/godot-ci:mono-4.7.2
     needs:
       - export-linux
       - export-mac
@@ -281,4 +281,3 @@ jobs:
         with:
           name: web
           path: build/web
->>>>>>> Stashed changes

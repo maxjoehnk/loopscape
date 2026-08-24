@@ -17,19 +17,19 @@ on:
       godot_ref:
         description: "Tag or branch of ComplexRobot/godot to build"
         required: false
-        default: "4.6.3-stable"
+        default: "4.7.2-stable"
   push:
     paths:
       - ".github/workflows/web-toolchain.yml"
 
 concurrency:
-  group: web-toolchain-${{ inputs.godot_ref || '4.6.3-stable' }}
+  group: web-toolchain-${{ inputs.godot_ref || '4.7.2-stable' }}
   cancel-in-progress: true
 
 env:
   GODOT_FORK: https://github.com/ComplexRobot/godot.git
   # Keep in sync with GODOT_VERSION in build.yml.
-  GODOT_REF: ${{ inputs.godot_ref || '4.6.3-stable' }}
+  GODOT_REF: ${{ inputs.godot_ref || '4.7.2-stable' }}
   # emsdk 6.0.6/6.0.7 run out of memory with LTO, per upstream.
   EMSDK_VERSION: 6.0.5
   TOOLCHAIN_ARTIFACT: godot-web-toolchain-linux-x86_64
@@ -191,7 +191,7 @@ jobs:
           version_output=$(tr -d '\r\n' < bin/version.txt)
           echo "Engine version: $version_output"
 
-          # e.g. "4.6.3.stable.mono.custom_build.d4b0745" -> 4.6.3 / stable
+          # e.g. "4.7.2.stable.mono.custom_build.d4b0745" -> 4.7.2 / stable
           [[ $version_output =~ ^([0-9.]+)\.([^0-9.][^.]*) ]]
           version=${BASH_REMATCH[1]}
           status=${BASH_REMATCH[2]}
