@@ -1,10 +1,31 @@
-<Project Sdk="Godot.NET.Sdk/4.4.1">
+<Project Sdk="Godot.NET.Sdk/4.5.1">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'web' ">net9.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>gmtkgamejam</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(GodotTargetPlatform)' == 'web' ">
+    <!-- The wasm publish needs an entry point, see Program.cs. -->
+    <OutputType>Exe</OutputType>
+    <!-- The web runtime is always built in invariant globalization mode. -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!--
+      The web export templates are built with threads enabled. If the export fails
+      while resolving the runtime pack, uncomment this.
+    -->
+    <!-- <WasmEnableThreads>true</WasmEnableThreads> -->
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(GodotTargetPlatform)' != 'web' ">
+    <Compile Remove="Program.cs" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(GodotTargetPlatform)' == 'web' ">
+    <TrimmerRootAssembly Include="$(AssemblyName)" />
+    <TrimmerRootAssembly Include="GodotSharp" />
+    <TrimmerRootAssembly Include="System.Private.CoreLib" />
+    <TrimmerRootAssembly Include="System.Runtime" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Scenes\LevelGoal.tscn" />
     <Content Include="Scenes\Levels\Outbreak.tscn" />
