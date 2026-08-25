@@ -1,3 +1,4 @@
+using System;
 using gmtkgamejam.Core;
 using Godot;
 using gmtkgamejam.Scenes.Enemies;
@@ -47,8 +48,15 @@ public partial class Map : Node
 
 	private void ShowLevelName()
 	{
-		LevelName levelName = this.LevelName.Instantiate<LevelName>();
-		this.AddChild(levelName);
+		try
+		{
+			LevelName levelName = this.LevelName.Instantiate<LevelName>();
+			this.AddChild(levelName);
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("Unable to show level name", e);
+		}
 	}
 
 	private void OnPlayerCaught()
