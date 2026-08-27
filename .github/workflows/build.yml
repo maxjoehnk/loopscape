@@ -254,6 +254,22 @@ jobs:
           EOF
           ls "$feed"
 
+      # If the csproj and the toolchain disagree, restore silently falls back to
+      # the official package of that version and the game links against a
+      # GodotSharp that does not match the export template.
+      - name: Verify SDK version matches the toolchain
+        run: |
+          set -euo pipefail
+          toolchain_version="$(cut -d. -f1-3 toolchain/template_dir.txt)"
+          csproj_version="$(grep -o 'Godot.NET.Sdk/[0-9.]*' *.csproj | cut -d/ -f2)"
+          echo "toolchain=$toolchain_version csproj=$csproj_version"
+          if [ "$toolchain_version" != "$csproj_version" ]; then
+            echo "::error::csproj targets Godot.NET.Sdk/$csproj_version but the toolchain built $toolchain_version."
+            exit 1
+          fi
+          test -f "toolchain/nuget/Godot.NET.Sdk.${toolchain_version}.nupkg"
+          test -f "toolchain/nuget/GodotSharp.${toolchain_version}.nupkg"
+
       - name: Install export templates
         run: |
           set -euo pipefail

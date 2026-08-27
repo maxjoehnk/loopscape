@@ -27,9 +27,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GODOT_FORK: https://github.com/ComplexRobot/godot.git
+  GODOT_FORK: https://github.com/maxjoehnk/godot.git
   # Keep in sync with GODOT_VERSION in build.yml.
-  GODOT_REF: ${{ inputs.godot_ref || '4.7.2-stable' }}
+  GODOT_REF: ${{ inputs.godot_ref || 'web-dotnet/bridge-set-out-param' }}
   # emsdk 6.0.6/6.0.7 run out of memory with LTO, per upstream.
   EMSDK_VERSION: 6.0.5
   TOOLCHAIN_ARTIFACT: godot-web-toolchain-linux-x86_64
@@ -93,11 +93,15 @@ jobs:
     needs: build-editor
 
     env:
+      # DEFAULT_LIBRARY_FUNCS_TO_INCLUDE pins three syscalls that went missing
+      # from the emitted JS in one build while the wasm kept importing them,
+      # which left the module unable to instantiate. Belt and braces alongside
+      # the bracket-matching fix to the DOTNET.setup erasure.
       SCONS_FLAGS: >-
         optimize=speed
         lto=full
         ccflags="-DNDEBUG"
-        linkflags="-sMALLOC=mimalloc"
+        linkflags="-sMALLOC=mimalloc -sDEFAULT_LIBRARY_FUNCS_TO_INCLUDE=__syscall_linkat,__syscall_setsockopt,__syscall_shutdown"
 
     steps:
       - name: Clone Godot fork
